@@ -74,3 +74,10 @@ struct cam
 	float fov_deg;
 	float drawDist;
 };
+
+struct resource
+{
+	LPCWSTR name;
+	void* res;
+	int type;
+};

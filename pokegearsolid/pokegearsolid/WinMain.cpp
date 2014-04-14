@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include "PokeGear.h"
 
+//#define _CRTDBG_MAP_ALLOC
 
 //fullscreen res
 #define SCREEN_WIDTH 1920
@@ -97,6 +98,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLi
 	// Unregister window
 	UnregisterClass(WINDOW_TITLE, g_hInstance);
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtDumpMemoryLeaks();
 	// Return successful
 	return 0;
 }

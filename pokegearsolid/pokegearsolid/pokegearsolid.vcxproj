@@ -91,6 +91,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PokeGear.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SoundFrame.h" />
     <ClInclude Include="Stealth.h" />
   </ItemGroup>
@@ -110,6 +111,7 @@
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="PokeGear.cpp" />
     <ClCompile Include="Pokemon.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SoundFrame.cpp" />
     <ClCompile Include="Stealth.cpp" />
     <ClCompile Include="WinMain.cpp" />

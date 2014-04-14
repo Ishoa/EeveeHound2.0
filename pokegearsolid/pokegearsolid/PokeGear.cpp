@@ -25,6 +25,9 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	input.init(hWnd,hInst);
 	display.Init(hWnd,hInst,bWindowed);
 	soundSys.Init();
+
+	resMan.changeLoader(&display);
+	//TODO: remove when res is fully intigrated
 	for(int i = 0;i<maxModels;++i)
 	{
 		Models[i].obj = 0;
@@ -33,7 +36,11 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	{
 		textures[i].objTex = 0;
 	}
+	
+	//TODO: change load so it dosnt use materials or textures stored here
+	
 	//start art loading
+	TextureStruc tempTex;
 	//Player Mat
 	materials[0].Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Ambient color reflected
 	materials[0].Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// Diffuse color reflected
@@ -46,55 +53,89 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	ZeroMemory(&Models[0].matrix,sizeof(Models[0].matrix));
 	D3DXMatrixTranslation(&Models[0].matrix,0,0,1);
 	//default textue
-	display.LoadTex(L"playtex.bmp",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"playtex.bmp",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"playtex.bmp");
+	textures[tex] = tempTex;
 	++tex;
 	//player texture
-	display.LoadTex(L"pikachu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"pikachu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"pikachu.png");
+	textures[tex] = tempTex;
 	Models[0].objTex = textures[tex].objTex;
 	++tex;
 	//enemy texture
-	display.LoadTex(L"enemy.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"enemy.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"enemy.png");
+	textures[tex] = tempTex;
 	++tex;
 	// BATTLE TEXTURES START
 	//battle background texture
-	display.LoadTex(L"battlebackground.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"battlebackground.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"battlebackground.png");
+	textures[tex] = tempTex;
 	++tex;
 	//battle pikachu texture
-	display.LoadTex(L"battlepikachu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"battlepikachu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"battlepikachu.png");
+	textures[tex] = tempTex;
 	++tex;
 	//battle ratata texture
-	display.LoadTex(L"battlerattata.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"battlerattata.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"battlerattata.png");
+	textures[tex] = tempTex;
 	++tex;
 	//battle zubat texture
-	display.LoadTex(L"battlezubat.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"battlezubat.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"battlezubat.png");
+	textures[tex] = tempTex;
 	++tex;
 	//battle koffing texture
-	display.LoadTex(L"battlekoffing.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"battlekoffing.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"battlekoffing.png");
+	textures[tex] = tempTex;
 	++tex;
 	//battle ekans texture
-	display.LoadTex(L"battleekans.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"battleekans.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_ARGB(0,0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"battleekans.png");
+	textures[tex] = tempTex;
 	++tex;
 
 	//character sprites
 	//snake
-	display.LoadTex(L"snake.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"snake.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"snake.png");
+	textures[tex] = tempTex;
 	++tex;
 	//joy
-	display.LoadTex(L"joy.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"joy.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"joy.png");
+	textures[tex] = tempTex;
 	++tex;
 	//pikachu
-	display.LoadTex(L"solidchu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"solidchu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"solidchu.png");
+	textures[tex] = tempTex;
 	++tex;
 	//evilchu
-	display.LoadTex(L"evilchu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"evilchu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"evilchu.png");
+	textures[tex] = tempTex;
 	++tex;
 
 	//load more stuff
-	display.LoadTex(L"Pokegearsolid.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	//display.LoadTex(L"Pokegearsolid.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"Pokegearsolid.png");
+	textures[tex] = tempTex;
 	++tex;
-	display.LoadTex(L"deathbyekans.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+
+	//display.LoadTex(L"deathbyekans.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"deathbyekans.png");
+	textures[tex] = tempTex;
 	++tex;
-	display.LoadTex(L"win.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+
+	//display.LoadTex(L"win.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
+	tempTex = *resMan.getTexture(L"win.png");
+	textures[tex] = tempTex;
 	++tex;
 
 	//world Model base
@@ -121,13 +162,18 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	materials[3].Power = 0.0f;										// Specular highlight intensity
 	//test set texture for world
 	Models[1].objTex = textures[0].objTex;
+	
+	
+	
+	//TODO: update all init loading
+
 	//end art load
 	sneak.init(Models[1],&materials[1],&materials[2],textures[0].objTex,textures[2].objTex,Models[2],&materials[3]);
 	sneak.setPlayPos(curPlay,0,0);
 	menuSys.reset();
 	//set sprite tex
-	curSpri.tex = textures[0].objTex;
-	curSpri.texinfo = textures[0].texInfo;
+	curSpri.tex = resMan.getTexture(L"playtex.bmp")->objTex;
+	curSpri.texinfo = resMan.getTexture(L"playtex.bmp")->texInfo;
 	menuSys.setMouseSprite(curSpri);
 
 	talks.init(textures);
@@ -484,6 +530,8 @@ void PokeGear::update()
 
 void PokeGear::shutdown()
 {
+	resMan.clear();
+	//TODO: move resource clean up to resMan
 	for(int i = 0;i<maxModels;++i)
 	{
 		if(Models[i].obj != 0)
@@ -496,6 +544,7 @@ void PokeGear::shutdown()
 			Models[i].obj = 0;
 		}
 	}
+	
 	for(int i = 0;i<maxtexture;++i)
 	{
 		if(textures[i].objTex!=0)
@@ -504,6 +553,7 @@ void PokeGear::shutdown()
 			textures[i].objTex = 0;
 		}
 	}
+	
 	sneak.shutdown();
 	input.ShutDown();
 	display.Shutdown();
