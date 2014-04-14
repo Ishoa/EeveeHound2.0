@@ -63,6 +63,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 		}
 		else
 		{
+			//add key full skip and full load
 			if(keyboard[DIK_RETURN]&0x80)
 			{
 				if(!readname&&!readtext&&takeinput)
@@ -77,6 +78,16 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 			{
 				//getline(infile,name, '#');
 				getline(infile,name, '#');
+				//fix this jank
+				/*
+				void print (char * c){ 
+					while(*c){
+						cout<<*c;
+						c++;
+					}
+					cout<<endl;
+				}
+				*/
 				if(name[0]==10)
 				{
 					tempName = "";
