@@ -7,6 +7,12 @@ Dio::Dio()
 
 void Dio::init(TextureStruc stuff[])
 {
+	c=0;
+	size_of_container=0;
+	//timer initializer
+	FPS=20;
+	now = clock();
+	delay = 1000/FPS;
 	//speaker position and color
 	speaker[0].rec.bottom=0;
 	speaker[0].rec.left=0;
@@ -37,9 +43,10 @@ void Dio::init(TextureStruc stuff[])
 		pics[i].matrix= matrixlove2;
 
 	}
-	salami.tex=0;
+	texholder.tex=0;
 	readname=true;
 	readtext=true;
+	saidtext=true;
 	infile.open("Dialogue.txt");
 }
 
@@ -63,13 +70,13 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 		}
 		else
 		{
-			//add key full skip and full load
 			if(keyboard[DIK_RETURN]&0x80)
 			{
 				if(!readname&&!readtext&&takeinput)
 				{
 					readname=true;
 					readtext=true;
+					saidtext=true;
 				}
 				takeinput = false;
 			}
@@ -78,16 +85,6 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 			{
 				//getline(infile,name, '#');
 				getline(infile,name, '#');
-				//fix this jank
-				/*
-				void print (char * c){ 
-					while(*c){
-						cout<<*c;
-						c++;
-					}
-					cout<<endl;
-				}
-				*/
 				if(name[0]==10)
 				{
 					tempName = "";
@@ -100,7 +97,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 				if (name=="Snake")
 				{
 					//display image snake
-					salami=pics[0];
+					texholder=pics[0];
 					//wchar_t buffer[190];
 					std::wstring stemp = s2ws(name);
 					LPCWSTR result = stemp.c_str();
@@ -112,7 +109,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 				else if (name=="NurseJoy")
 				{
 					//display image Nurse Joy
-					salami=pics[1];
+					texholder=pics[1];
 					//wchar_t buffer[190];
 					std::wstring stemp = s2ws(name);
 					LPCWSTR result = stemp.c_str();
@@ -123,7 +120,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 				else if (name=="SolidChu")
 				{
 					//display image Solid Chu
-					salami=pics[2];
+					texholder=pics[2];
 					//wchar_t buffer[190];
 					std::wstring stemp = s2ws(name);
 					LPCWSTR result = stemp.c_str();
@@ -134,7 +131,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 				else if (name=="EvilChu")
 				{
 					//display image Evil chu
-					salami=pics[3];
+					texholder=pics[3];
 					//wchar_t buffer[190];
 					std::wstring stemp = s2ws(name);
 					LPCWSTR result = stemp.c_str();
@@ -144,54 +141,83 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 				}
 			}
 			//bool readtext=true;
-			string holder;
+			//string holder;
 			//text="";
 			if (readtext)
 			{
+				// timing logic
+				then = now;
+				now = clock();
+				passed = now - then;
+				soon = now + delay;
 				//print text
-				for (int timelapse=textWait;timelapse>=0;timelapse--)
+				// throttle code
+				while(clock() < soon){};
+				if (saidtext)
 				{
-					if (timelapse==0)
+					getline(infile,holder,'#');
+					saidtext=false;
+					for(int i=0;i<holder.size();++i)
 					{
-						getline(infile,holder,'#');
-						if (name=="endscene")
-						{
-							readtext=true;
-							readname=true;
-							salami.tex=0;
-							newscene=false;
-							//name="";
-							std::wstring stemp = s2ws(name);
-							LPCWSTR result = stemp.c_str();
-							swprintf_s(tempname, 190, L"%s",result);
-							speaker[0].text=tempname;
-							//text="";
-							std::wstring stemp2 = s2ws(text);
-							LPCWSTR result2 = stemp2.c_str();
-							swprintf_s(temptext, 190, L"%s",result2);
-							speaker[1].text=temptext;
-							
-						}
-						else if (holder=="stop")
-						{
-							readtext=false;
-							infile.ignore();
-							takeinput=true;
-							//infile.close();
-							text="";
-						}
-						
-						else if (holder!="endscene")
-						{
-							text=text+holder;
-							//print text
-							//wchar_t buffer2[190];
-							std::wstring stemp2 = s2ws(text);
-							LPCWSTR result2 = stemp2.c_str();
-							swprintf_s(temptext, 190, L"%s",result2);
-							speaker[1].text=temptext;
-						}
+						text[i]=holder[i];
 					}
+					size_of_container=holder.size();
+				}
+				if (name=="endscene")
+				{
+					readtext=true;
+					readname=true;
+					saidtext=true;
+					texholder.tex=0;
+					newscene=false;
+					//name="";
+					std::wstring stemp = s2ws(name);
+					LPCWSTR result = stemp.c_str();
+					swprintf_s(tempname, 190, L"%s",result);
+					speaker[0].text=tempname;
+					//text="";
+					std::wstring stemp2 = s2ws(text);
+					LPCWSTR result2 = stemp2.c_str();
+					swprintf_s(temptext, 190, L"%s",result2);
+					speaker[1].text=temptext;
+							
+				}
+				else if (holder=="stop")
+				{
+					readtext=false;
+					infile.ignore();
+					saidtext=true;
+					takeinput=true;
+					//infile.close();
+					for (int i=0;i<256;i++)
+					{
+						text[i]=0;
+					}
+					addedwords="";
+				}
+						
+				else if (holder!="endscene")
+				{
+					//text=text+holder;
+					//print text
+					//wchar_t buffer2[190];
+					//test bellow
+					addedwords=addedwords+text[c];
+					std::wstring stemp2 = s2ws(addedwords);
+					LPCWSTR result2 = stemp2.c_str();
+					swprintf_s(temptext, 190, L"%s",result2);
+					speaker[1].text=temptext;
+					c++;
+					if (c==size_of_container)
+					{
+						saidtext=true;
+						c=0;
+					}
+					//test above
+				/*	std::wstring stemp2 = s2ws(text);
+					LPCWSTR result2 = stemp2.c_str();
+					swprintf_s(temptext, 190, L"%s",result2);
+					speaker[1].text=temptext;*/
 				}
 			}
 		}
@@ -201,7 +227,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 
 void Dio::getRend(renderInfo sprites[],int& NumSprit,TextStruct text[],int& NumText)
 {
-	sprites[NumSprit]=salami;
+	sprites[NumSprit]=texholder;
 	NumSprit++;
 	for (int i=0;i<=1;i++)
 	{
