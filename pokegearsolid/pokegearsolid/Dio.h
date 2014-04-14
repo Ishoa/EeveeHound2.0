@@ -3,6 +3,7 @@
 #include <fstream>
 #include <stdio.h>
 #include "Defines.h"
+#include <ctime>
 
 #define textWait 20000000
 #define textDebug 2
@@ -19,15 +20,22 @@ class Dio
 {
 private:
 	string name;
-	string text;
+	char text[256];
+	string holder;
+	string addedwords;
+	int c;
+	int size_of_container;
 	TextStruct speaker[maxspoken];
 	renderInfo pics[maxpics];
-	renderInfo salami;
+	renderInfo texholder;
 	bool readname;
 	bool readtext;
+	bool saidtext;
 	wchar_t tempname[190];
 	wchar_t temptext[190];
 	ifstream infile;
+	int FPS;
+	time_t now, then, passed, soon, delay;
 public:
 	Dio::Dio();
 	void Dio::init(TextureStruc[]);
