@@ -7,6 +7,10 @@ Dio::Dio()
 
 void Dio::init(TextureStruc stuff[])
 {
+	for (int i=0;i<256;i++)
+	{
+		text[i]=0;
+	}
 	c=0;
 	size_of_container=0;
 	//timer initializer
@@ -145,6 +149,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 			//text="";
 			if (readtext)
 			{
+			
 				// timing logic
 				then = now;
 				now = clock();
@@ -153,7 +158,19 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 				//print text
 				// throttle code
 				while(clock() < soon){};
-				if (saidtext)
+				if (keyboard[DIK_LSHIFT]&0x80)
+				{	
+					bool done=false;
+					while(!done)
+					{
+						getline(infile,name, '#');
+						if(name=="endscene")
+						{
+							done=true;
+						}
+					}
+				}
+				else if (saidtext)
 				{
 					getline(infile,holder,'#');
 					saidtext=false;
@@ -163,6 +180,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 					}
 					size_of_container=holder.size();
 				}
+			
 				if (name=="endscene")
 				{
 					readtext=true;
@@ -171,6 +189,12 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 					texholder.tex=0;
 					newscene=false;
 					//name="";
+					for (int i=0;i<256;i++)
+					{
+						text[i]=0;
+					}
+					addedwords.clear();
+					c=0;
 					std::wstring stemp = s2ws(name);
 					LPCWSTR result = stemp.c_str();
 					swprintf_s(tempname, 190, L"%s",result);
@@ -193,7 +217,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 					{
 						text[i]=0;
 					}
-					addedwords="";
+					addedwords.clear();
 				}
 						
 				else if (holder!="endscene")
@@ -202,16 +226,28 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 					//print text
 					//wchar_t buffer2[190];
 					//test bellow
-					addedwords=addedwords+text[c];
-					std::wstring stemp2 = s2ws(addedwords);
-					LPCWSTR result2 = stemp2.c_str();
-					swprintf_s(temptext, 190, L"%s",result2);
-					speaker[1].text=temptext;
-					c++;
-					if (c==size_of_container)
+					if(keyboard[DIK_SPACE]&0x80)
 					{
 						saidtext=true;
 						c=0;
+						std::wstring stemp2 = s2ws(text);
+						LPCWSTR result2 = stemp2.c_str();
+						swprintf_s(temptext, 190, L"%s",result2);
+						speaker[1].text=temptext;
+					}
+					else
+					{
+						addedwords=addedwords+text[c];
+						std::wstring stemp2 = s2ws(addedwords);
+						LPCWSTR result2 = stemp2.c_str();
+						swprintf_s(temptext, 190, L"%s",result2);
+						speaker[1].text=temptext;
+						c++;
+						if (c==size_of_container)
+						{
+							saidtext=true;
+							c=0;
+						}
 					}
 					//test above
 				/*	std::wstring stemp2 = s2ws(text);
