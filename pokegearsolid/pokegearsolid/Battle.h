@@ -20,6 +20,18 @@
 #define numsprites 100
 #define numbattletext 100
 
+enum gameState
+{
+	MainMenu,
+	stealth,
+	story,
+	battle,
+	GameOver,
+	victory,// Balls to the wall I'm putting some states here
+	options,
+	credits
+};
+
 
 class Battle {
 private:
@@ -28,13 +40,13 @@ private:
 	int curnumsprites;
 	TextStruct battletext[numbattletext];
 	int curtextincrement;
-	
+	wchar_t charactertempthingy[32][16];
 	
 public:
 	Battle();
 	~Battle();
 	Battle(Menu a_battlemenu, int a_numsprites, renderInfo* a_sprites);
-	void Init(TextureStruc[] );
+	void Init(TextureStruc[], int a_sprit);
 	void battleStart(Pokemon, Pokemon);
 	void addText(Pokemon, Move);
 	void addYouWin();

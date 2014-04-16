@@ -8,12 +8,7 @@ PokeGear::PokeGear()
 	camera.cam_look_pos = D3DXVECTOR3(0,0,-4);
 	bCanInput = true;
 	menuPushed = false;
-	donePlayerAttack = false;
-	doneEnemyAttack = false;
-	battleover = false;
-	playerlost = false;
 	curState = MainMenu;
-	curBattleState = MAIN;
 	bCanInput2 = true;
 	newscene=true;
 	musicMute = false;
@@ -192,8 +187,7 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	Menu tempmenu;
 	tempmenu.battleReset();
 	tempmenu.setMouseSprite(curSpri);
-	battler.setBattleMenu(tempmenu);
-	battler.Init(textures);
+	batMan.Init(textures,tex);
 
 	//load music
 	soundSys.loadStream("MGSMain.mp3",0);
@@ -308,7 +302,6 @@ void PokeGear::update()
 			break;
 		case 1:
 			curState = battle;
-			curBattleState = BATTLESTART;
 			soundSys.PlayStream(1,true);
 			soundSys.PlayStream(2,musicMute);
 			break;
@@ -332,165 +325,7 @@ void PokeGear::update()
 		}
 		break;
 	case battle:
-		battler.GetBattleRender(Sprites,numSprits,Text,numText,curPlay.getEnemy().getSpecies());
-		if(curPlay.getPikachu().getCurHP() <=0) {
-			curBattleState = RESOLVEMOVES;
-			
-		}
-
-		switch(curBattleState) {
-		case BATTLESTART:
-			curPlay.randomizeEnemy();
-			battler.menuReset(curPlay.getPikachu(),curPlay.getEnemy());
-			curBattleState = MAIN;
-			break;
-		case MAIN:
-			if((mouse.rgbButtons[0]&0x80)||(keyboard[DIK_RETURN]&0x80)) {
-				if(battler.getBattleMenu().getPushed(tempInt,menuPushed)) {
-					switch(tempInt) {
-					case 0: // Fight
-						curBattleState = MOVES;
-						battler.menuResetWithMoves(curPlay.getPikachu(),curPlay.getEnemy());
-						break;
-					case 1: // Bag
-
-						break;
-					case 2: // Pokemon
-
-						break;
-					case 3: // Run
-
-						break;
-					}
-				}
-			}
-			break;
-		case MOVES:
-			if((mouse.rgbButtons[0]&0x80)||(keyboard[DIK_RETURN]&0x80)) {
-				if(battler.getBattleMenu().getPushed(tempInt,menuPushed)) {
-					switch(tempInt) {
-					case 0:
-						if(curPlay.getPikachu().getMove(0).getCurPP() > 0) {
-							curPlay.setPlayerMove(0);
-							curPlay.decrementPikaPP(0);
-							battler.menuResetWithMoves(curPlay.getPikachu(),curPlay.getEnemy());
-							//display.zeroWaitTime();
-							curBattleState = WAIT;
-						}
-						else {
-
-						}
-						break;
-					case 1:
-						if(curPlay.getPikachu().getMove(1).getCurPP() > 0) {
-							curPlay.setPlayerMove(1);
-							curPlay.decrementPikaPP(1);
-							battler.menuResetWithMoves(curPlay.getPikachu(),curPlay.getEnemy());
-							//display.zeroWaitTime();
-							curBattleState = WAIT;
-						}
-						else {
-
-						}
-						break;
-					case 2:
-						if(curPlay.getPikachu().getMove(2).getCurPP() > 0) {
-							curPlay.setPlayerMove(2);
-							curPlay.decrementPikaPP(2);
-							battler.menuResetWithMoves(curPlay.getPikachu(),curPlay.getEnemy());
-							//display.zeroWaitTime();
-							curBattleState = WAIT;
-						}
-						else {
-
-						}
-						break;
-					case 3:
-						if(curPlay.getPikachu().getMove(3).getCurPP() > 0) {
-							curPlay.setPlayerMove(3);
-							curPlay.decrementPikaPP(3);
-							battler.menuResetWithMoves(curPlay.getPikachu(),curPlay.getEnemy());
-							//display.zeroWaitTime();
-							curBattleState = WAIT;
-						}
-						else {
-
-						}
-						break;
-					}
-				}
-			}
-			break;
-		case WAIT:
-			if(display.getWaitTime() >= 4 && !battleover) {
-				if(donePlayerAttack && doneEnemyAttack) {
-					display.zeroWaitTime();
-					battler.menuReset(curPlay.getPikachu(), curPlay.getEnemy());
-					curBattleState = MAIN;
-					donePlayerAttack = false;
-					doneEnemyAttack = false;
-				}
-				else {
-					display.zeroWaitTime();
-					curBattleState = RESOLVEMOVES;
-				}
-			}
-			else if(display.getWaitTime() >= 4 && battleover) {
-				curBattleState = BATTLESTART;
-				curState = stealth;
-				soundSys.PlayStream(2,true);
-				soundSys.PlayStream(1,musicMute);
-				donePlayerAttack = false;
-				doneEnemyAttack = false;
-				battleover = false;
-			}
-
-			break;
-		case RESOLVEMOVES:
-			if(curPlay.getPikachu().getCurHP() <=0) {
-				playerlost = true;
-				curBattleState = BATTLESTART;
-				curState = GameOver;
-				soundSys.PlayStream(2,true);
-				soundSys.PlayStream(1,musicMute);
-				menuSys.setQuitMenu();
-				curPlay.initPikachu();
-				donePlayerAttack = false;
-				doneEnemyAttack = false;
-				battleover = false;
-			}
-			else if(curPlay.getPikachu().getSpeed() >= curPlay.getEnemy().getSpeed() && !donePlayerAttack || doneEnemyAttack || curPlay.getPikachu().getMove(curPlay.getPlayerMove()).getPriority() == 1 && !donePlayerAttack) {
-				curPlay.resolveMoveInOrder(true);
-				donePlayerAttack = true;
-				battler.menuResetWithMoves(curPlay.getPikachu(), curPlay.getEnemy());
-				battler.addText(curPlay.getPikachu(),curPlay.getPikachu().getMove(curPlay.getPlayerMove()));
-			}
-			else if(curPlay.getEnemy().getCurHP() > 0){
-				int randomenemymove = rand()%4;
-				curPlay.setEnemyMove(randomenemymove);
-				curPlay.decrementEnemyPP(randomenemymove);
-				curPlay.resolveMoveInOrder(false);
-				doneEnemyAttack = true;
-				battler.menuResetWithMoves(curPlay.getPikachu(), curPlay.getEnemy());
-				battler.addText(curPlay.getEnemy(),curPlay.getEnemy().getMove(curPlay.getEnemyMove()));
-			}
-			else {
-				doneEnemyAttack = false;
-				donePlayerAttack = false;
-				battleover = true;
-			}
-			if(battleover)
-				curBattleState = OVER;
-			else
-				curBattleState = WAIT;
-			break;
-		case OVER:
-			display.zeroWaitTime();
-			battler.addYouWin();
-			curBattleState = WAIT;
-			break;
-		}
-		battler.Update(keyboard,mouse,menuPushed);
+		batMan.Update(keyboard,mouse,Sprites,numSprits,Text,numText, menuPushed,curState,soundSys,menuSys);
 		break;
 	case GameOver:
 		menuSys.GetRender(Sprites[numSprits],numSprits,Text,numText);

@@ -77,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Battle.h" />
+    <ClInclude Include="BattleManager.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="curosr.h" />
     <ClInclude Include="Defines.h" />
@@ -91,12 +92,14 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="PokeGear.h" />
+    <ClInclude Include="Pokemon.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SoundFrame.h" />
     <ClInclude Include="Stealth.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Battle.cpp" />
+    <ClCompile Include="BattleManager.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="cursor.cpp" />
     <ClCompile Include="Dio.cpp" />

@@ -10,6 +10,7 @@
 #include "Battle.h"
 #include "Dio.h"
 #include "ResourceManager.h"
+#include "BattleManager.h"
 
 #define max3d 100
 #define max2d 100
@@ -22,33 +23,14 @@
 #define maxMat 10
 
 
-enum gameState
-{
-	MainMenu,
-	stealth,
-	story,
-	battle,
-	GameOver,
-	victory,// Balls to the wall I'm putting some states here
-	options,
-	credits
-};
 
-enum battleState {
-	BATTLESTART,
-	MAIN,
-	MOVES,
-	WAIT,
-	RESOLVEMOVES,
-	OVER
-};
+
 
 class PokeGear
 {
 private:
 	ResourceManager resMan;
 	gameState curState;
-	battleState curBattleState;
 	dxinputframe input;
 	DirectXFrame display;
 	char keyboard [256];
@@ -82,11 +64,7 @@ private:
 	char scenenumber;
 	bool newscene;
 	bool musicMute;
-	Battle battler;
-	bool donePlayerAttack;
-	bool doneEnemyAttack;
-	bool battleover;
-	bool playerlost;
+	battleManager batMan;
 	Dio talks;
 public:
 	PokeGear();
