@@ -120,10 +120,27 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="battlebackground.png" />
+    <None Include="battleekans.png" />
+    <None Include="battlekoffing.png" />
+    <None Include="battlepikachu.png" />
+    <None Include="battlerattata.png" />
+    <None Include="battlezubat.png" />
+    <None Include="deathbyekans.png" />
     <None Include="Dialogue.txt" />
+    <None Include="enemy - Copy.png" />
+    <None Include="enemy.png" />
+    <None Include="enemyold.png" />
+    <None Include="evilchu.png" />
     <None Include="fmodex.dll" />
+    <None Include="joy.png" />
+    <None Include="pikachu.png" />
     <None Include="playtex.bmp" />
+    <None Include="Pokegearsolid.png" />
+    <None Include="snake.png" />
+    <None Include="solidchu.png" />
     <None Include="uvtest.png" />
+    <None Include="win.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

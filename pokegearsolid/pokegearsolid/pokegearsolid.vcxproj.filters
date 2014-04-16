@@ -151,5 +151,56 @@
     <None Include="Dialogue.txt">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="win.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="solidchu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="snake.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Pokegearsolid.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pikachu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="joy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="evilchu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="enemyold.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="enemy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="enemy - Copy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="deathbyekans.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="battlezubat.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="battlerattata.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="battlepikachu.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="battlekoffing.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="battleekans.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="battlebackground.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

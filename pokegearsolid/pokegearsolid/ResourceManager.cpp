@@ -119,7 +119,7 @@ void ResourceManager::addMaterial(LPCWSTR name,D3DMATERIAL9 &mat){
 	++curMat;
 }
 
-void ResourceManager::addCube(LPCWSTR name,float height,float width, float depth){
+void ResourceManager::addCube(LPCWSTR name,float height,float width, float depth,bool cen){
 	//create a resource so we can add one
 	resource reso;
 	//set res name
@@ -127,7 +127,12 @@ void ResourceManager::addCube(LPCWSTR name,float height,float width, float depth
 	//set res type to model
 	reso.type = model;
 	//create cube
-	dxManager->CreateUVCube(Models[curModels],height,width,depth);
+	if(cen) {
+		dxManager->CreateUVCube(Models[curModels],height,width,depth);
+	}
+	else {
+		dxManager->CreateUncenteredCube(Models[curModels],height,width,depth);
+	}
 	//set res' resource
 	reso.res = &Models[curModels];
 	//increment model count

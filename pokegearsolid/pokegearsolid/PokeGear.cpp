@@ -54,7 +54,7 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	D3DXMatrixTranslation(&Models[0].matrix,0,0,1);
 	
 
-	resMan.addCube(L"PlayerModel",1,1,1);
+	resMan.addCube(L"PlayerModel",1,1,1,true);
 	resMan.setModMat(L"PlayerModel",L"PlayerMat");
 	ZeroMemory(&resMan.getModel(L"PlayerModel")->matrix,sizeof(D3DMATRIX));
 	D3DXMatrixTranslation(&resMan.getModel(L"PlayerModel")->matrix,0,0,1);
@@ -146,8 +146,10 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 
 	//world Model base
 	display.CreateUncenteredCube(Models[1],1,1,1);
+	resMan.addCube(L"FloorBase",1,1,1,false);
 	//create enemy model
 	display.CreateUVCube(Models[2],2,2,1);
+	resMan.addCube(L"EnemyMod",2,2,1,true);
 	//floor mat
 	materials[1].Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
 	materials[1].Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);		// Diffuse color reflected
@@ -174,7 +176,7 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	//TODO: update all init loading
 
 	//end art load
-	sneak.init(Models[1],&materials[1],&materials[2],textures[0].objTex,textures[2].objTex,Models[2],&materials[3]);
+	sneak.init(*resMan.getModel(L"FloorBase"),&materials[1],&materials[2],resMan.getTexture(L"playtex.bmp")->objTex,resMan.getTexture(L"enemy.png")->objTex,*resMan.getModel(L"EnemyMod"),&materials[3]);
 	sneak.setPlayPos(curPlay,0,0);
 	menuSys.reset();
 	//set sprite tex
@@ -182,7 +184,7 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	curSpri.texinfo = resMan.getTexture(L"playtex.bmp")->texInfo;
 	menuSys.setMouseSprite(curSpri);
 
-	talks.init(textures);
+	talks.init(&resMan);
 
 	Menu tempmenu;
 	tempmenu.battleReset();

@@ -5,7 +5,7 @@ Dio::Dio()
 {
 }
 
-void Dio::init(TextureStruc stuff[])
+void Dio::init(ResourceManager* resMan)
 {
 	for (int i=0;i<256;i++)
 	{
@@ -39,14 +39,32 @@ void Dio::init(TextureStruc stuff[])
 	D3DXMatrixScaling(&matrixlove,0.5f,0.5f,0.5f);
 	D3DXMatrixTranslation(&matrixlove1,20,150,0);
 	D3DXMatrixMultiply(&matrixlove2,&matrixlove1,&matrixlove);
-
+	/*
 	for (int i=0;i<=maxpics;i++)
 	{
 		pics[i].tex=stuff[i+9].objTex;
 		pics[i].texinfo=stuff[i+9].texInfo;
 		pics[i].matrix= matrixlove2;
-
 	}
+	*/
+
+	for (int i=0;i<=maxpics;i++)
+	{
+		pics[i].matrix= matrixlove2;
+	}
+
+	pics[0].tex = resMan->getTexture(L"snake.png")->objTex;
+	pics[0].texinfo = resMan->getTexture(L"snake.png")->texInfo;
+
+	pics[1].tex = resMan->getTexture(L"joy.png")->objTex;
+	pics[1].texinfo = resMan->getTexture(L"joy.png")->texInfo;
+
+	pics[2].tex = resMan->getTexture(L"solidchu.png")->objTex;
+	pics[2].texinfo = resMan->getTexture(L"solidchu.png")->texInfo;
+
+	pics[3].tex = resMan->getTexture(L"evilchu.png")->objTex;
+	pics[3].texinfo = resMan->getTexture(L"evilchu.png")->texInfo;
+
 	texholder.tex=0;
 	readname=true;
 	readtext=true;

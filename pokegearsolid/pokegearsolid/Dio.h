@@ -5,6 +5,8 @@
 #include "Defines.h"
 #include <ctime>
 
+#include "ResourceManager.h"
+
 #define textWait 20000000
 #define textDebug 2
 
@@ -38,7 +40,7 @@ private:
 	time_t now, then, passed, soon, delay;
 public:
 	Dio::Dio();
-	void Dio::init(TextureStruc[]);
+	void Dio::init(ResourceManager* resMan);
 	void update(char[],bool&,bool&);
 	void getRend(renderInfo[],int& NumSprit,TextStruct[],int& NumText);
 	string getname(){return name;}

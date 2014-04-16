@@ -36,7 +36,7 @@ public:
 	D3Object* getModel(LPCWSTR name);
 
 	void addMaterial(LPCWSTR name,D3DMATERIAL9 &mat);
-	void addCube(LPCWSTR name,float height,float width, float depth);
+	void addCube(LPCWSTR name,float height,float width, float depth,bool centered);
 
 	bool setModMat(LPCWSTR modName,LPCWSTR matName);
 	bool setModTex(LPCWSTR modName,LPCWSTR texName);
