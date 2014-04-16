@@ -21,6 +21,7 @@ PokeGear::PokeGear()
 
 void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 {
+	D3DMATERIAL9 tempMat;
 	int tex = 0;
 	input.init(hWnd,hInst);
 	display.Init(hWnd,hInst,bWindowed);
@@ -42,16 +43,26 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	//start art loading
 	TextureStruc tempTex;
 	//Player Mat
-	materials[0].Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Ambient color reflected
-	materials[0].Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// Diffuse color reflected
-	materials[0].Emissive = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// Emissive color reflected
-	materials[0].Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);		// Specular
-	materials[0].Power = 0.0f;										// Specular highlight intensity
+	tempMat.Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Ambient color reflected
+	tempMat.Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// Diffuse color reflected
+	tempMat.Emissive = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// Emissive color reflected
+	tempMat.Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);		// Specular
+	tempMat.Power = 0.0f;				// Specular highlight intensity
+	
+	resMan.addMaterial(L"PlayerMat",tempMat);
+
 	//player Model
+	
 	display.CreateUVCube(Models[0],1,1,1);
 	Models[0].objMat = &materials[0];
 	ZeroMemory(&Models[0].matrix,sizeof(Models[0].matrix));
 	D3DXMatrixTranslation(&Models[0].matrix,0,0,1);
+	
+
+	resMan.addCube(L"PlayerModel",1,1,1);
+	resMan.setModMat(L"PlayerModel",L"PlayerMat");
+	ZeroMemory(&resMan.getModel(L"PlayerModel")->matrix,sizeof(D3DMATRIX));
+	D3DXMatrixTranslation(&resMan.getModel(L"PlayerModel")->matrix,0,0,1);
 	//default textue
 	//display.LoadTex(L"playtex.bmp",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
 	tempTex = *resMan.getTexture(L"playtex.bmp");
@@ -60,8 +71,8 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	//player texture
 	//display.LoadTex(L"pikachu.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
 	tempTex = *resMan.getTexture(L"pikachu.png");
-	textures[tex] = tempTex;
-	Models[0].objTex = textures[tex].objTex;
+	textures[tex] = tempTex;	 
+	resMan.getModel(L"PlayerModel")->objTex = resMan.getTexture(L"pikachu.png")->objTex;	
 	++tex;
 	//enemy texture
 	//display.LoadTex(L"enemy.png",0,0,0,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,D3DCOLOR_XRGB(0,0,0),&textures[tex].texInfo,0,&textures[tex].objTex);
@@ -210,7 +221,7 @@ void PokeGear::update()
 	{
 	case MainMenu:
 		menuSys.GetRender(Sprites[numSprits],numSprits,Text,numText);
-		tempRend.tex = textures[13].objTex;
+		tempRend.tex = resMan.getTexture(L"Pokegearsolid.png")->objTex;
 		D3DXMatrixIdentity(&tempRend.matrix);
 		D3DXMatrixScaling(&tempRend.matrix,1.3f,1.3f,1.3f);
 		Sprites[numSprits] = tempRend;
@@ -290,9 +301,9 @@ void PokeGear::update()
 			camera.cam_look_pos.x = temp.X;
 			camera.cam_look_pos.y = temp.Y;
 			//add player to draw list
-			D3DXMatrixTranslation(&Models[0].matrix,temp.X,temp.Y,temp.Z);
-			D3Objs[numobjs] = Models[0];
-			D3DXMatrixTranslation(&D3Objs[numobjs].matrix,temp.X,temp.Y,temp.Z);
+			D3DXMatrixTranslation(&resMan.getModel(L"PlayerModel")->matrix,temp.X,temp.Y,temp.Z);
+			D3Objs[numobjs] = *resMan.getModel(L"PlayerModel");
+			D3DXMatrixTranslation(&resMan.getModel(L"PlayerModel")->matrix,temp.X,temp.Y,temp.Z);
 			++numobjs;
 			break;
 		case 1:
@@ -544,7 +555,7 @@ void PokeGear::shutdown()
 			Models[i].obj = 0;
 		}
 	}
-	
+	/*
 	for(int i = 0;i<maxtexture;++i)
 	{
 		if(textures[i].objTex!=0)
@@ -553,7 +564,7 @@ void PokeGear::shutdown()
 			textures[i].objTex = 0;
 		}
 	}
-	
+	*/
 	sneak.shutdown();
 	input.ShutDown();
 	display.Shutdown();

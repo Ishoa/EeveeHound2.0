@@ -84,6 +84,125 @@ TextureStruc* ResourceManager::getTexture(LPCWSTR name){
 		return 0;
 }
 
+D3Object* ResourceManager::getModel(LPCWSTR name){
+	//get resource manager size
+	int res = resources.size();
+	//look for a model with the name
+	for(int i = 0;i<res;++i){
+		//if the res is a model and has the same name return it
+		if(resources[i].type == model && resources[i].name == name){
+			return (D3Object*)resources[i].res;
+		}
+	}
+	//if none return null
+	return 0;
+}
+
+void ResourceManager::addMaterial(LPCWSTR name,D3DMATERIAL9 &mat){
+	//create a resource so we can add one
+	resource reso;
+	//set res name
+	reso.name = name;
+	//set type to material
+	reso.type = material;
+	//copy material
+	materials[curMat].Ambient = mat.Ambient;
+	materials[curMat].Diffuse = mat.Diffuse;
+	materials[curMat].Emissive = mat.Emissive;
+	materials[curMat].Power = mat.Power;
+	materials[curMat].Specular = mat.Specular;
+	//set res resource
+	reso.res = &materials[curMat];
+	//add res to resource list
+	resources.push_back(reso);
+	//increment mat count
+	++curMat;
+}
+
+void ResourceManager::addCube(LPCWSTR name,float height,float width, float depth){
+	//create a resource so we can add one
+	resource reso;
+	//set res name
+	reso.name = name;
+	//set res type to model
+	reso.type = model;
+	//create cube
+	dxManager->CreateUVCube(Models[curModels],height,width,depth);
+	//set res' resource
+	reso.res = &Models[curModels];
+	//increment model count
+	++curModels;
+	//add res to res list
+	resources.push_back(reso);
+}
+
+//set a models material and returns true if failed
+bool ResourceManager::setModMat(LPCWSTR modName,LPCWSTR matName){
+	//rember resources
+	resource * mod, * mat;
+	//set pointers to null
+	mod = 0;
+	mat = 0;
+	//get resource manager size
+	int res = resources.size();
+	//look for a model with the name
+	for(int i = 0;i<res;++i){
+		//if the res is a model and has the same name return it
+		if(resources[i].type == model && resources[i].name == modName){
+			mod = &resources[i];
+			break;
+		}
+	}
+	//look for a material with the name
+	for(int i = 0;i<res;++i){
+		//if the res is a material and has the same name return it
+		if(resources[i].type == material && resources[i].name == matName){
+			mat = &resources[i];
+			break;
+		}
+	}
+	//if mod or mat in null return an error
+	if(!mod||!mat){
+		return true;
+	}
+	//set model mat
+	((D3Object*)mod->res)->objMat = (D3DMATERIAL9*)mat->res;
+	return false;
+}
+
+bool ResourceManager::setModTex(LPCWSTR modName,LPCWSTR texName){
+	//rember resources
+	resource * mod, * tex;
+	//set pointers to null
+	mod = 0;
+	tex = 0;
+	//get resource manager size
+	int res = resources.size();
+	//look for a model with the name
+	for(int i = 0;i<res;++i){
+		//if the res is a model and has the same name return it
+		if(resources[i].type == model && resources[i].name == modName){
+			mod = &resources[i];
+			break;
+		}
+	}
+	//look for a texture with the name
+	for(int i = 0;i<res;++i){
+		//if the res is a texture and has the same name return it
+		if(resources[i].type == texture && resources[i].name == texName){
+			tex = &resources[i];
+			break;
+		}
+	}
+	//if mod or tex in null return an error
+	if(!mod||!tex){
+		return true;
+	}
+	//set model tex
+	((D3Object*)mod->res)->objTex = ((TextureStruc*)tex->res)->objTex;
+	return false;
+}
+
 void ResourceManager::clear(){
 	for(int i = 0;i<maxModels;++i)
 	{
@@ -97,6 +216,7 @@ void ResourceManager::clear(){
 			Models[i].obj = 0;
 		}
 	}
+
 	for(int i = 0;i<maxtexture;++i)
 	{
 		if(textures[i].objTex!=0)

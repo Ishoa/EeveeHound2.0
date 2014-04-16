@@ -35,7 +35,11 @@ public:
 	D3DMATERIAL9* getMaterial(LPCWSTR name);
 	D3Object* getModel(LPCWSTR name);
 
-	void addMaterial(LPCWSTR name,D3DMATERIAL9 mat);
+	void addMaterial(LPCWSTR name,D3DMATERIAL9 &mat);
+	void addCube(LPCWSTR name,float height,float width, float depth);
+
+	bool setModMat(LPCWSTR modName,LPCWSTR matName);
+	bool setModTex(LPCWSTR modName,LPCWSTR texName);
 
 	int remove(LPCWSTR name,type type);
 	void clear();
