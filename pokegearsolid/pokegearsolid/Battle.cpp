@@ -23,7 +23,7 @@ Battle::Battle(Menu a_battlemenu, int a_numsprites, renderInfo* a_sprites) {
 }
 
 
-void Battle::Init(TextureStruc a_sprites[], int a_sprit) {
+void Battle::Init(ResourceManager* resMan) {
 	srand(time(NULL));
 	curnumsprites = 0;
 	D3DXMATRIX matrixlovetwo;
@@ -50,11 +50,30 @@ void Battle::Init(TextureStruc a_sprites[], int a_sprit) {
 		}
 		
 		D3DXMatrixMultiply(&matrixlovetwo3, &matrixlovetwo2, &matrixlovetwo);
-		sprites[i-3].tex = a_sprites[i].objTex;
-		sprites[i-3].texinfo = a_sprites[i].texInfo;
+		
+		
 		sprites[i-3].matrix = matrixlovetwo3;
+
 		++curnumsprites;
 	}
+	//get background
+	sprites[0].tex = resMan->getTexture(L"battlebackground.png")->objTex;
+	sprites[0].texinfo = resMan->getTexture(L"battlebackground.png")->texInfo;
+	//get battlepicachu
+	sprites[1].tex = resMan->getTexture(L"battlepikachu.png")->objTex;
+	sprites[1].texinfo = resMan->getTexture(L"battlepikachu.png")->texInfo;
+	//get battle ratata
+	sprites[2].tex = resMan->getTexture(L"battlerattata.png")->objTex;
+	sprites[2].texinfo = resMan->getTexture(L"battlerattata.png")->texInfo;
+	//get battle zubat
+	sprites[3].tex = resMan->getTexture(L"battlezubat.png")->objTex;
+	sprites[3].texinfo = resMan->getTexture(L"battlezubat.png")->texInfo;
+	//get battle koffing
+	sprites[4].tex = resMan->getTexture(L"battlekoffing.png")->objTex;
+	sprites[4].texinfo = resMan->getTexture(L"battlekoffing.png")->texInfo;
+	//get battle ekans
+	sprites[5].tex = resMan->getTexture(L"battleekans.png")->objTex;
+	sprites[5].texinfo = resMan->getTexture(L"battleekans.png")->texInfo;
 }
 
 

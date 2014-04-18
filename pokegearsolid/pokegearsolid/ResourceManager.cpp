@@ -98,6 +98,20 @@ D3Object* ResourceManager::getModel(LPCWSTR name){
 	return 0;
 }
 
+D3DMATERIAL9* ResourceManager::getMaterial(LPCWSTR name){
+	//get resource manager size
+	int res = resources.size();
+	//look for a material with the name
+	for(int i = 0;i<res;++i){
+		//if the res is a material and has the same name return it
+		if(resources[i].type == material && resources[i].name == name){
+			return (D3DMATERIAL9*)resources[i].res;
+		}
+	}
+	//if none return null
+	return 0;
+}
+
 void ResourceManager::addMaterial(LPCWSTR name,D3DMATERIAL9 &mat){
 	//create a resource so we can add one
 	resource reso;

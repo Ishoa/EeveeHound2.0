@@ -18,8 +18,8 @@ battleManager::~battleManager() {
 }
 
 
-void battleManager::Init(TextureStruc a_sprites[] , int a_sprit) {
-	mBattle.Init(a_sprites, a_sprit);
+void battleManager::Init(ResourceManager* resMan) {
+	mBattle.Init(resMan);
 	pikachu.init(L"Solid Chu");
 	enemy.init(L"Solid Chu");
 	playermove = 0;

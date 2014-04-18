@@ -151,32 +151,44 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	display.CreateUVCube(Models[2],2,2,1);
 	resMan.addCube(L"EnemyMod",2,2,1,true);
 	//floor mat
-	materials[1].Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
-	materials[1].Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);		// Diffuse color reflected
-	materials[1].Emissive = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Emissive color reflected
-	materials[1].Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);		// Specular
-	materials[1].Power = 0.0f;										// Specular highlight intensity
+	tempMat.Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
+	tempMat.Diffuse = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);		// Diffuse color reflected
+	tempMat.Emissive = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Emissive color reflected
+	tempMat.Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);		// Specular
+	tempMat.Power = 0.0f;										// Specular highlight intensity
+	resMan.addMaterial(L"FloorMat",tempMat);
 	//wall mat
-	materials[2].Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
-	materials[2].Diffuse = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Diffuse color reflected
-	materials[2].Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);		// Emissive color reflected
-	materials[2].Specular = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Specular
-	materials[2].Power = 0.0f;										// Specular highlight intensity
+	tempMat.Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
+	tempMat.Diffuse = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Diffuse color reflected
+	tempMat.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);		// Emissive color reflected
+	tempMat.Specular = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Specular
+	tempMat.Power = 0.0f;										// Specular highlight intensity
+	resMan.addMaterial(L"WallMat",tempMat);
 	//enemy mat
-	materials[3].Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Ambient color reflected
-	materials[3].Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// Diffuse color reflected
-	materials[3].Emissive = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// Emissive color reflected
-	materials[3].Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);		// Specular
-	materials[3].Power = 0.0f;										// Specular highlight intensity
+	tempMat.Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);		// Ambient color reflected
+	tempMat.Diffuse = D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f);		// Diffuse color reflected
+	tempMat.Emissive = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		// Emissive color reflected
+	tempMat.Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);		// Specular
+	tempMat.Power = 0.0f;										// Specular highlight intensity
+	resMan.addMaterial(L"EnemyMat",tempMat);
 	//test set texture for world
-	Models[1].objTex = textures[0].objTex;
+	//Models[1].objTex = textures[0].objTex;
 	
 	
 	
 	//TODO: update all init loading
 
 	//end art load
-	sneak.init(*resMan.getModel(L"FloorBase"),&materials[1],&materials[2],resMan.getTexture(L"playtex.bmp")->objTex,resMan.getTexture(L"enemy.png")->objTex,*resMan.getModel(L"EnemyMod"),&materials[3]);
+	/*
+	sneak.init(*resMan.getModel(L"FloorBase"),
+		resMan.getMaterial(L"FloorMat"),
+		resMan.getMaterial(L"WallMat"),
+		resMan.getTexture(L"playtex.bmp")->objTex,
+		resMan.getTexture(L"enemy.png")->objTex,
+		*resMan.getModel(L"EnemyMod"),
+		resMan.getMaterial(L"EnemyMat"));
+		*/
+	sneak.init(&resMan);
 	sneak.setPlayPos(curPlay,0,0);
 	menuSys.reset();
 	//set sprite tex
@@ -189,7 +201,7 @@ void PokeGear::init(HWND& hWnd, HINSTANCE& hInst, bool bWindowed)
 	Menu tempmenu;
 	tempmenu.battleReset();
 	tempmenu.setMouseSprite(curSpri);
-	batMan.Init(textures,tex);
+	batMan.Init(&resMan);
 
 	//load music
 	soundSys.loadStream("MGSMain.mp3",0);
@@ -331,7 +343,7 @@ void PokeGear::update()
 		break;
 	case GameOver:
 		menuSys.GetRender(Sprites[numSprits],numSprits,Text,numText);
-		tempRend.tex = textures[14].objTex;
+		tempRend.tex = resMan.getTexture(L"deathbyekans.png")->objTex;
 		D3DXMatrixIdentity(&tempRend.matrix);
 		D3DXMatrixScaling(&tempRend.matrix,0.6f,0.6f,0.6f);
 		Sprites[numSprits] = tempRend;
@@ -352,7 +364,7 @@ void PokeGear::update()
 		break;
 	case victory:
 		menuSys.GetRender(Sprites[numSprits],numSprits,Text,numText);
-		tempRend.tex = textures[15].objTex;
+		tempRend.tex = resMan.getTexture(L"win.png")->objTex;
 		D3DXMatrixIdentity(&tempRend.matrix);
 		Sprites[numSprits] = tempRend;
 		++numSprits;

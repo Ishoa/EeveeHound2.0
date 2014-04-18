@@ -17,6 +17,7 @@
 #include "Pokemon.h"
 #include "Button.h"
 #include <ctime>
+#include "ResourceManager.h"
 #define numsprites 100
 #define numbattletext 100
 
@@ -46,7 +47,7 @@ public:
 	Battle();
 	~Battle();
 	Battle(Menu a_battlemenu, int a_numsprites, renderInfo* a_sprites);
-	void Init(TextureStruc[], int a_sprit);
+	void Init(ResourceManager* resMan);
 	void battleStart(Pokemon, Pokemon);
 	void addText(Pokemon, Move);
 	void addYouWin();

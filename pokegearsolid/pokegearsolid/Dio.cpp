@@ -175,7 +175,7 @@ void Dio::update(char keyboard[],bool& takeinput,bool& newscene)
 				soon = now + delay;
 				//print text
 				// throttle code
-				while(clock() < soon){};
+				while(clock() < soon){Sleep(1);};
 				if (keyboard[DIK_LSHIFT]&0x80)
 				{	
 					bool done=false;

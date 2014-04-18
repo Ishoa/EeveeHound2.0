@@ -37,7 +37,7 @@ private:
 public:
 	battleManager();
 	~battleManager();
-	void Init(TextureStruc a_sprites[], int a_sprit);
+	void Init(ResourceManager* resMan);
 	void Update(char keyboard[],DIMOUSESTATE2& mouse, renderInfo sprites[],int& NumSprit,TextStruct text[],int& NumText, bool& menuPushed, gameState& curState, SoundFrame& soundSys, Menu& menuSys);
 	void setPikachu(Pokemon);
 	void setEnemy(Pokemon);

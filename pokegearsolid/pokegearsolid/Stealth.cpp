@@ -12,13 +12,21 @@ void linkNodes(AINode* node1,AINode* node2)
 	node1->nextNodeNum = node2->nodeNum;
 }
 
-void Stealth::init(D3Object& floorbase,D3DMATERIAL9* floormat,D3DMATERIAL9* wallmat,Texture text, Texture enemyTex, D3Object& enemyModel, D3DMATERIAL9* enemyMat)
+void Stealth::init(ResourceManager *resMan)
 {
 	//Pos temp1,temp2;
-	CurMap.CreMap(20,20,floorbase,floormat,wallmat,text);
+	CurMap.CreMap(20,
+		20,
+		*(resMan->getModel(L"FloorBase")),
+		resMan->getMaterial(L"FloorMat"),
+		resMan->getMaterial(L"WallMat"),
+		resMan->getTexture(L"playtex.bmp")->objTex);
 	//CurMap=Map(20,20,floorbase,floormat,wallmat,text);
 
-	loadMap("map.txt",enemyTex,enemyModel,enemyMat);
+	loadMap("map.txt",
+		resMan->getTexture(L"enemy.png")->objTex,
+		*(resMan->getModel(L"EnemyMod")),
+		resMan->getMaterial(L"EnemyMat"));
 	
 	//temp1.X=1;
 	//temp1.Y=1;
