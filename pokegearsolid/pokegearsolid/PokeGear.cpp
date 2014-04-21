@@ -339,7 +339,8 @@ void PokeGear::update()
 		}
 		break;
 	case battle:
-		batMan.Update(keyboard,mouse,Sprites,numSprits,Text,numText, menuPushed,curState,soundSys,menuSys);
+		batMan.Update(keyboard,mouse, menuPushed,curState,soundSys,menuSys);
+		batMan.Render(curState,Sprites,numSprits,Text,numText);
 		break;
 	case GameOver:
 		menuSys.GetRender(Sprites[numSprits],numSprits,Text,numText);

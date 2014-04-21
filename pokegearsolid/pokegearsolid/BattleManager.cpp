@@ -25,25 +25,27 @@ void battleManager::Init(ResourceManager* resMan) {
 	playermove = 0;
 	enemymove = 0;
 	curBattleState = BATTLESTART;
+	nextBattleState = BATTLESTART;
 	donePlayerAttack = false;
 	doneEnemyAttack = false;
 	battleover = false;
 	playerlost = false;
+	musicMute = false;
 	ltime = GetTickCount();
 	curTime = ltime;
 	waittime = 0;
 }
 
 
-void battleManager::Update(char keyboard[],DIMOUSESTATE2& mouse, renderInfo sprites[],int& NumSprit,TextStruct text[],int& NumText, bool& menuPushed, gameState& curState, SoundFrame& soundSys, Menu& menuSys) {///////////////////////////////////////////////////////// FINISH THIS
-	
+void battleManager::Update(char keyboard[],DIMOUSESTATE2& mouse, bool& menuPushed, gameState& curState, SoundFrame& soundSys, Menu& menuSys) {///////////////////////////////////////////////////////// FINISH THIS
+	curTime = GetTickCount();
 	if(curTime-ltime >= 1000.0f)
 	{
 		ltime = curTime;
 		++waittime;
 	}
 	int tempInt = 0;
-	mBattle.GetBattleRender(sprites,NumSprit,text,NumText,enemy.getSpecies());
+	
 	if(pikachu.getCurHP() <=0) {
 		curBattleState = RESOLVEMOVES;
 
@@ -79,55 +81,15 @@ void battleManager::Update(char keyboard[],DIMOUSESTATE2& mouse, renderInfo spri
 	case MOVES:
 		if((mouse.rgbButtons[0]&0x80)||(keyboard[DIK_RETURN]&0x80)) {
 			if(mBattle.getBattleMenu().getPushed(tempInt,menuPushed)) {
-				switch(tempInt) {
-				case 0:
-					if(pikachu.getMove(0).getCurPP() > 0) {
-						setPlayerMove(0);
-						decrementPikaPP(0);
-						mBattle.menuResetWithMoves(pikachu,enemy);
-						//display.zeroWaitTime();
-						curBattleState = WAIT;
-					}
-					else {
+				if(pikachu.getMove(tempInt).getCurPP() > 0) {
+					setPlayerMove(tempInt);
+					decrementPikaPP(tempInt);
+					mBattle.menuResetWithMoves(pikachu,enemy);
+					waittime = 0;
+					curBattleState = WAIT;
+				}
+				else {
 
-					}
-					break;
-				case 1:
-					if(pikachu.getMove(1).getCurPP() > 0) {
-						setPlayerMove(1);
-						decrementPikaPP(1);
-						mBattle.menuResetWithMoves(pikachu,enemy);
-						//display.zeroWaitTime();
-						curBattleState = WAIT;
-					}
-					else {
-
-					}
-					break;
-				case 2:
-					if(pikachu.getMove(2).getCurPP() > 0) {
-						setPlayerMove(2);
-						decrementPikaPP(2);
-						mBattle.menuResetWithMoves(pikachu,enemy);
-						//display.zeroWaitTime();
-						curBattleState = WAIT;
-					}
-					else {
-
-					}
-					break;
-				case 3:
-					if(pikachu.getMove(3).getCurPP() > 0) {
-						setPlayerMove(3);
-						decrementPikaPP(3);
-						mBattle.menuResetWithMoves(pikachu,enemy);
-						//display.zeroWaitTime();
-						curBattleState = WAIT;
-					}
-					else {
-
-					}
-					break;
 				}
 			}
 		}
@@ -158,7 +120,6 @@ void battleManager::Update(char keyboard[],DIMOUSESTATE2& mouse, renderInfo spri
 			doneEnemyAttack = false;
 			battleover = false;
 		}
-
 		break;
 	case RESOLVEMOVES:
 		if(pikachu.getCurHP() <=0) {
@@ -173,7 +134,7 @@ void battleManager::Update(char keyboard[],DIMOUSESTATE2& mouse, renderInfo spri
 			doneEnemyAttack = false;
 			battleover = false;
 		}
-		else if(pikachu.getSpeed() >= enemy.getSpeed() && !donePlayerAttack || doneEnemyAttack || pikachu.getMove(playermove).getPriority() == 1 && !donePlayerAttack) {
+		else if(pikachu.getSpeed() >= enemy.getSpeed() && !donePlayerAttack || doneEnemyAttack && !donePlayerAttack || pikachu.getMove(playermove).getPriority() == 1 && !donePlayerAttack) {
 			resolveMoveInOrder(true);
 			donePlayerAttack = true;
 			mBattle.menuResetWithMoves(pikachu, enemy);
@@ -205,6 +166,31 @@ void battleManager::Update(char keyboard[],DIMOUSESTATE2& mouse, renderInfo spri
 		break;
 	}
 	mBattle.Update(keyboard,mouse,menuPushed);
+}
+
+
+void battleManager::Render(gameState& curstate, renderInfo sprites[],int& NumSprit,TextStruct text[],int& NumText) {
+	mBattle.GetBattleRender(sprites,NumSprit,text,NumText,enemy.getSpecies());
+	switch(curBattleState) {
+	case BATTLESTART:
+
+		break;
+	case MAIN:
+		
+		break;
+	case MOVES:
+		
+		break;
+	case WAIT:
+		
+		break;
+	case RESOLVEMOVES:
+		
+		break;
+	case OVER:
+		
+		break;
+	}
 }
 
 

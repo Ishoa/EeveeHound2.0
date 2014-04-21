@@ -27,7 +27,7 @@ private:
 	Pokemon pikachu;
 	Pokemon enemy;
 	int playermove,enemymove;
-	BattleState curBattleState;
+	BattleState curBattleState, nextBattleState;
 	bool donePlayerAttack;
 	bool doneEnemyAttack;
 	bool battleover;
@@ -38,7 +38,10 @@ public:
 	battleManager();
 	~battleManager();
 	void Init(ResourceManager* resMan);
-	void Update(char keyboard[],DIMOUSESTATE2& mouse, renderInfo sprites[],int& NumSprit,TextStruct text[],int& NumText, bool& menuPushed, gameState& curState, SoundFrame& soundSys, Menu& menuSys);
+	void Update(char keyboard[],DIMOUSESTATE2& mouse,bool& menuPushed, gameState& curState, SoundFrame& soundSys, Menu& menuSys);
+	void Render(gameState& curstate, renderInfo sprites[],int& NumSprit,TextStruct text[],int& NumText);
+
+	//Older things
 	void setPikachu(Pokemon);
 	void setEnemy(Pokemon);
 	Pokemon getPikachu();
